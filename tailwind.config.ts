@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+// Add success and warning colors used in dictionaries page
+
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
