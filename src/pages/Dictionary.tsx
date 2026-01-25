@@ -9,7 +9,7 @@ import {
   MoreVertical,
   Trash2,
   Edit2,
-  CheckCircle2,
+  GraduationCap,
   Volume2,
   Settings,
   User,
@@ -207,12 +207,9 @@ const Dictionary = () => {
     setDeletingWordId(null);
   };
 
-  const handleMarkAsMastered = (id: string) => {
-    setWords(
-      words.map((w) =>
-        w.id === id ? { ...w, mastery: 100, lastPracticed: "Just now" } : w
-      )
-    );
+  const handleStartPractice = (id: string) => {
+    // TODO: Navigate to practice/exercise page for this word
+    console.log("Starting practice for word:", id);
   };
 
   const containerVariants = {
@@ -424,15 +421,13 @@ const Dictionary = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        {word.mastery < 100 && (
-                          <DropdownMenuItem
-                            className="gap-2 text-success focus:text-success"
-                            onClick={() => handleMarkAsMastered(word.id)}
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            Mark as Mastered
-                          </DropdownMenuItem>
-                        )}
+                        <DropdownMenuItem
+                          className="gap-2 text-primary focus:text-primary"
+                          onClick={() => handleStartPractice(word.id)}
+                        >
+                          <GraduationCap className="h-4 w-4" />
+                          Master
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           className="gap-2"
                           onClick={() => handleOpenEditDialog(word)}
