@@ -58,6 +58,14 @@ const exercises = [
     levelColor: "bg-primary/10 text-primary",
     mastery: "60+",
   },
+  {
+    icon: Pencil,
+    name: "Writing",
+    description: "Write sentences using the word",
+    level: "Expert",
+    levelColor: "bg-primary/10 text-primary",
+    mastery: "80+",
+  },
 ];
 
 const ExerciseTypes = () => {
@@ -73,7 +81,7 @@ const ExerciseTypes = () => {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <span className="text-sm font-semibold text-primary uppercase tracking-wider mb-4 block">
-            7 Exercise Types
+            8 Exercise Types
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Progressive Difficulty That Adapts to You
