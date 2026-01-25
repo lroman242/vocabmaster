@@ -21,6 +21,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -103,6 +113,16 @@ const Dictionaries = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newDictionaryName, setNewDictionaryName] = useState("");
   const [newDictionaryLanguage, setNewDictionaryLanguage] = useState("");
+  
+  // Edit dialog state
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingDictionary, setEditingDictionary] = useState<typeof mockDictionaries[0] | null>(null);
+  const [editDictionaryName, setEditDictionaryName] = useState("");
+  const [editDictionaryLanguage, setEditDictionaryLanguage] = useState("");
+  
+  // Delete confirmation state
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingDictionaryId, setDeletingDictionaryId] = useState<string | null>(null);
 
   const filteredDictionaries = dictionaries.filter((dict) =>
     dict.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -129,8 +149,37 @@ const Dictionaries = () => {
     setIsCreateDialogOpen(false);
   };
 
-  const handleDeleteDictionary = (id: string) => {
-    setDictionaries(dictionaries.filter((d) => d.id !== id));
+  const handleOpenEditDialog = (dictionary: typeof mockDictionaries[0]) => {
+    setEditingDictionary(dictionary);
+    setEditDictionaryName(dictionary.name);
+    setEditDictionaryLanguage(dictionary.languageCode);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditDictionary = () => {
+    if (!editingDictionary || !editDictionaryName.trim() || !editDictionaryLanguage) return;
+
+    const language = languages.find((l) => l.code === editDictionaryLanguage);
+    setDictionaries(dictionaries.map((d) =>
+      d.id === editingDictionary.id
+        ? { ...d, name: editDictionaryName, language: language?.name || "Unknown", languageCode: editDictionaryLanguage }
+        : d
+    ));
+    setIsEditDialogOpen(false);
+    setEditingDictionary(null);
+  };
+
+  const handleOpenDeleteDialog = (id: string) => {
+    setDeletingDictionaryId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deletingDictionaryId) {
+      setDictionaries(dictionaries.filter((d) => d.id !== deletingDictionaryId));
+    }
+    setIsDeleteDialogOpen(false);
+    setDeletingDictionaryId(null);
   };
 
   const containerVariants = {
@@ -344,13 +393,16 @@ const Dictionaries = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem className="gap-2">
+                      <DropdownMenuItem 
+                        className="gap-2"
+                        onClick={() => handleOpenEditDialog(dictionary)}
+                      >
                         <Edit2 className="h-4 w-4" />
                         Rename
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="gap-2 text-destructive focus:text-destructive"
-                        onClick={() => handleDeleteDictionary(dictionary.id)}
+                        onClick={() => handleOpenDeleteDialog(dictionary.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                         Delete
@@ -408,6 +460,78 @@ const Dictionaries = () => {
             ))}
           </motion.div>
         </AnimatePresence>
+
+        {/* Edit Dictionary Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Edit Dictionary</DialogTitle>
+              <DialogDescription>
+                Update the name or language of your dictionary.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="edit-name">Dictionary Name</Label>
+                <Input
+                  id="edit-name"
+                  placeholder="e.g., Spanish Basics"
+                  value={editDictionaryName}
+                  onChange={(e) => setEditDictionaryName(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-language">Language</Label>
+                <Select
+                  value={editDictionaryLanguage}
+                  onValueChange={setEditDictionaryLanguage}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        <span className="flex items-center gap-2">
+                          <span>{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleEditDictionary}>Save Changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Dictionary?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the dictionary
+                and all {dictionaries.find(d => d.id === deletingDictionaryId)?.wordCount || 0} words within it.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </div>
   );
