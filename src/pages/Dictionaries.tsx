@@ -451,9 +451,11 @@ const Dictionaries = () => {
                   <span className="text-xs text-muted-foreground">
                     Practiced {dictionary.lastPracticed}
                   </span>
-                  <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary">
+                  <Button variant="ghost" size="sm" className="gap-1 text-primary hover:text-primary" asChild>
+                    <Link to={`/dictionaries/${dictionary.id}`}>
                     Open
-                    <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
                   </Button>
                 </div>
               </motion.div>
