@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp";
 import ForgotPassword from "./pages/ForgotPassword";
 import Dictionaries from "./pages/Dictionaries";
 import Dictionary from "./pages/Dictionary";
+import SimpleReview from "./pages/SimpleReview";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dictionaries" element={<Dictionaries />} />
           <Route path="/dictionaries/:id" element={<Dictionary />} />
+          <Route path="/dictionaries/:dictionaryId/simple-review" element={<SimpleReview />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
