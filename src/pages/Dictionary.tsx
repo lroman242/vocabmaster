@@ -15,6 +15,8 @@ import {
   User,
   LogOut,
   Bell,
+  ImagePlus,
+  X,
   Star,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -109,7 +111,7 @@ const mockWords = [
   },
 ];
 
-type Word = typeof mockWords[0];
+type Word = typeof mockWords[0] & { image?: string };
 
 const getMasteryColor = (mastery: number) => {
   if (mastery === 100) return "text-success";
@@ -140,12 +142,12 @@ const Dictionary = () => {
 
   // Add word dialog state
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newWord, setNewWord] = useState({ term: "", definition: "", example: "" });
+  const [newWord, setNewWord] = useState({ term: "", definition: "", example: "", image: "" });
 
   // Edit word dialog state
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingWord, setEditingWord] = useState<Word | null>(null);
-  const [editWord, setEditWord] = useState({ term: "", definition: "", example: "" });
+  const [editWord, setEditWord] = useState({ term: "", definition: "", example: "", image: "" });
 
   // Delete confirmation state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -165,18 +167,19 @@ const Dictionary = () => {
       term: newWord.term,
       definition: newWord.definition,
       example: newWord.example,
+      image: newWord.image,
       mastery: 0,
       lastPracticed: "Never",
     };
 
     setWords([word, ...words]);
-    setNewWord({ term: "", definition: "", example: "" });
+    setNewWord({ term: "", definition: "", example: "", image: "" });
     setIsAddDialogOpen(false);
   };
 
   const handleOpenEditDialog = (word: Word) => {
     setEditingWord(word);
-    setEditWord({ term: word.term, definition: word.definition, example: word.example });
+    setEditWord({ term: word.term, definition: word.definition, example: word.example, image: word.image || "" });
     setIsEditDialogOpen(true);
   };
 
@@ -186,7 +189,7 @@ const Dictionary = () => {
     setWords(
       words.map((w) =>
         w.id === editingWord.id
-          ? { ...w, term: editWord.term, definition: editWord.definition, example: editWord.example }
+          ? { ...w, term: editWord.term, definition: editWord.definition, example: editWord.example, image: editWord.image }
           : w
       )
     );
@@ -500,7 +503,7 @@ const Dictionary = () => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="example">Example Sentence (optional)</Label>
+                <Label htmlFor="example">Example of usage (with context)</Label>
                 <Textarea
                   id="example"
                   placeholder="e.g., ¡Hola! ¿Cómo estás?"
@@ -508,6 +511,43 @@ const Dictionary = () => {
                   onChange={(e) => setNewWord({ ...newWord, example: e.target.value })}
                   rows={2}
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label>Image (optional)</Label>
+                {newWord.image ? (
+                  <div className="relative w-full h-32 rounded-md overflow-hidden border border-border">
+                    <img src={newWord.image} alt="Word" className="w-full h-full object-cover" />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2 h-6 w-6"
+                      onClick={() => setNewWord({ ...newWord, image: "" })}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-md cursor-pointer hover:border-primary/50 transition-colors">
+                    <ImagePlus className="h-8 w-8 text-muted-foreground mb-2" />
+                    <span className="text-sm text-muted-foreground">Click to upload image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setNewWord({ ...newWord, image: reader.result as string });
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                )}
               </div>
             </div>
             <DialogFooter>
@@ -548,7 +588,7 @@ const Dictionary = () => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-example">Example Sentence (optional)</Label>
+                <Label htmlFor="edit-example">Example of usage (with context)</Label>
                 <Textarea
                   id="edit-example"
                   placeholder="e.g., ¡Hola! ¿Cómo estás?"
@@ -556,6 +596,43 @@ const Dictionary = () => {
                   onChange={(e) => setEditWord({ ...editWord, example: e.target.value })}
                   rows={2}
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label>Image (optional)</Label>
+                {editWord.image ? (
+                  <div className="relative w-full h-32 rounded-md overflow-hidden border border-border">
+                    <img src={editWord.image} alt="Word" className="w-full h-full object-cover" />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-2 right-2 h-6 w-6"
+                      onClick={() => setEditWord({ ...editWord, image: "" })}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-md cursor-pointer hover:border-primary/50 transition-colors">
+                    <ImagePlus className="h-8 w-8 text-muted-foreground mb-2" />
+                    <span className="text-sm text-muted-foreground">Click to upload image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setEditWord({ ...editWord, image: reader.result as string });
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                )}
               </div>
             </div>
             <DialogFooter>
