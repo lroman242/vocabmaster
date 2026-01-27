@@ -115,9 +115,13 @@ const AssociationExercise = () => {
 
   const handleSelectOption = (optionId: string) => {
     if (answerState !== "unanswered") return;
-    
     setSelectedId(optionId);
-    const isCorrect = optionId === currentExercise.correctWord.id;
+  };
+
+  const handleCheckAnswer = () => {
+    if (!selectedId || answerState !== "unanswered") return;
+    
+    const isCorrect = selectedId === currentExercise.correctWord.id;
     setAnswerState(isCorrect ? "correct" : "incorrect");
     
     if (isCorrect) {
@@ -145,6 +149,9 @@ const AssociationExercise = () => {
 
   const getOptionStyle = (optionId: string) => {
     if (answerState === "unanswered") {
+      if (optionId === selectedId) {
+        return "border-primary bg-primary/10 ring-2 ring-primary/30";
+      }
       return "border-border hover:border-primary/50 hover:bg-primary/5";
     }
     if (optionId === currentExercise.correctWord.id) {
@@ -154,6 +161,12 @@ const AssociationExercise = () => {
       return "border-destructive bg-destructive/10";
     }
     return "border-border opacity-50";
+  };
+
+  const getMasteryPoints = () => {
+    if (answerState === "correct") return "+10";
+    if (answerState === "incorrect") return "-5";
+    return null;
   };
 
   return (
@@ -340,7 +353,20 @@ const AssociationExercise = () => {
                   </div>
                 )}
 
-                {/* Feedback & Continue */}
+                {/* Check Button (before answer is checked) */}
+                {answerState === "unanswered" && selectedId && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6"
+                  >
+                    <Button onClick={handleCheckAnswer} className="w-full">
+                      Check Answer
+                    </Button>
+                  </motion.div>
+                )}
+
+                {/* Feedback & Continue (after answer is checked) */}
                 <AnimatePresence>
                   {answerState !== "unanswered" && (
                     <motion.div
@@ -360,12 +386,18 @@ const AssociationExercise = () => {
                           <>
                             <CheckCircle2 className="h-5 w-5" />
                             <span className="font-semibold">Correct!</span>
+                            <span className="ml-2 rounded-full bg-success/20 px-3 py-1 text-sm font-bold">
+                              {getMasteryPoints()} mastery
+                            </span>
                           </>
                         ) : (
                           <>
                             <XCircle className="h-5 w-5" />
                             <span className="font-semibold">
                               Incorrect. The answer is "{currentExercise.correctWord.term}"
+                            </span>
+                            <span className="ml-2 rounded-full bg-destructive/20 px-3 py-1 text-sm font-bold">
+                              {getMasteryPoints()} mastery
                             </span>
                           </>
                         )}
