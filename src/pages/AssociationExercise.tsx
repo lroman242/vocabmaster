@@ -284,12 +284,9 @@ const AssociationExercise = () => {
                   ) : (
                     /* Show Word */
                     <div className="flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10 p-12">
-                      <h2 className="mb-2 text-4xl font-bold text-foreground">
+                      <h2 className="text-4xl font-bold text-foreground">
                         {currentExercise.correctWord.term}
                       </h2>
-                      <p className="text-lg text-muted-foreground">
-                        {currentExercise.correctWord.definition}
-                      </p>
                     </div>
                   )}
                 </div>
