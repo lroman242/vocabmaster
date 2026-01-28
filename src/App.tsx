@@ -11,6 +11,7 @@ import Dictionaries from "./pages/Dictionaries";
 import Dictionary from "./pages/Dictionary";
 import SimpleReview from "./pages/SimpleReview";
 import AssociationExercise from "./pages/AssociationExercise";
+import ContextExercise from "./pages/ContextExercise";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/dictionaries/:id" element={<Dictionary />} />
           <Route path="/dictionaries/:dictionaryId/simple-review" element={<SimpleReview />} />
           <Route path="/dictionaries/:dictionaryId/association" element={<AssociationExercise />} />
+          <Route path="/dictionaries/:dictionaryId/context" element={<ContextExercise />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
