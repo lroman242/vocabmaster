@@ -11,6 +11,7 @@ import Dictionaries from "./pages/Dictionaries";
 import Dictionary from "./pages/Dictionary";
 import SimpleReview from "./pages/SimpleReview";
 import AssociationExercise from "./pages/AssociationExercise";
+import AssociationHardExercise from "./pages/AssociationHardExercise";
 import ContextExercise from "./pages/ContextExercise";
 import TranslationExercise from "./pages/TranslationExercise";
 import TermsOfService from "./pages/TermsOfService";
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/dictionaries/:id" element={<Dictionary />} />
           <Route path="/dictionaries/:dictionaryId/simple-review" element={<SimpleReview />} />
           <Route path="/dictionaries/:dictionaryId/association" element={<AssociationExercise />} />
+          <Route path="/dictionaries/:dictionaryId/association-hard" element={<AssociationHardExercise />} />
           <Route path="/dictionaries/:dictionaryId/context" element={<ContextExercise />} />
           <Route path="/dictionaries/:dictionaryId/translation" element={<TranslationExercise />} />
           <Route path="/terms" element={<TermsOfService />} />
