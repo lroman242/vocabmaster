@@ -13,6 +13,7 @@ import SimpleReview from "./pages/SimpleReview";
 import AssociationExercise from "./pages/AssociationExercise";
 import AssociationHardExercise from "./pages/AssociationHardExercise";
 import ContextExercise from "./pages/ContextExercise";
+import ContextHardExercise from "./pages/ContextHardExercise";
 import TranslationExercise from "./pages/TranslationExercise";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/dictionaries/:dictionaryId/association" element={<AssociationExercise />} />
           <Route path="/dictionaries/:dictionaryId/association-hard" element={<AssociationHardExercise />} />
           <Route path="/dictionaries/:dictionaryId/context" element={<ContextExercise />} />
+          <Route path="/dictionaries/:dictionaryId/context-hard" element={<ContextHardExercise />} />
           <Route path="/dictionaries/:dictionaryId/translation" element={<TranslationExercise />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
