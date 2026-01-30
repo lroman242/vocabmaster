@@ -1,3 +1,5 @@
+# Fully vibe-coded (testing lovable.dev capabilities)
+
 # Welcome to your Lovable project
 
 ## Project info
