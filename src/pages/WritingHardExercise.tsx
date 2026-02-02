@@ -23,17 +23,17 @@ const mockDictionary = {
   flag: "🇪🇸",
 };
 
-const mockWords = [
-  { id: "1", term: "Manzana", definition: "Apple" },
-  { id: "2", term: "Perro", definition: "Dog" },
-  { id: "3", term: "Casa", definition: "House" },
-  { id: "4", term: "Sol", definition: "Sun" },
-  { id: "5", term: "Libro", definition: "Book" },
-  { id: "6", term: "Agua", definition: "Water" },
-  { id: "7", term: "Gato", definition: "Cat" },
-  { id: "8", term: "Luna", definition: "Moon" },
-  { id: "9", term: "Árbol", definition: "Tree" },
-  { id: "10", term: "Flor", definition: "Flower" },
+const mockSentences = [
+  { id: "1", english: "My dog likes bones", spanish: "A mi perro le gustan los huesos" },
+  { id: "2", english: "The cat is sleeping on the sofa", spanish: "El gato está durmiendo en el sofá" },
+  { id: "3", english: "I eat an apple every day", spanish: "Yo como una manzana cada día" },
+  { id: "4", english: "The sun is very hot today", spanish: "El sol está muy caliente hoy" },
+  { id: "5", english: "I am reading a book", spanish: "Estoy leyendo un libro" },
+  { id: "6", english: "I need water please", spanish: "Necesito agua por favor" },
+  { id: "7", english: "The house is very big", spanish: "La casa es muy grande" },
+  { id: "8", english: "The moon is beautiful tonight", spanish: "La luna está hermosa esta noche" },
+  { id: "9", english: "The tree has many leaves", spanish: "El árbol tiene muchas hojas" },
+  { id: "10", english: "I like red flowers", spanish: "Me gustan las flores rojas" },
 ];
 
 type AnswerState = "unanswered" | "correct" | "incorrect";
@@ -52,15 +52,15 @@ const WritingHardExercise = () => {
   const navigate = useNavigate();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const words = useMemo(() => shuffleArray(mockWords), []);
+  const sentences = useMemo(() => shuffleArray(mockSentences), []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState("");
   const [answerState, setAnswerState] = useState<AnswerState>("unanswered");
   const [correctCount, setCorrectCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
-  const currentWord = words[currentIndex];
-  const progress = (currentIndex / words.length) * 100;
+  const currentSentence = sentences[currentIndex];
+  const progress = (currentIndex / sentences.length) * 100;
 
   useEffect(() => {
     if (answerState === "unanswered" && textareaRef.current) {
@@ -68,19 +68,22 @@ const WritingHardExercise = () => {
     }
   }, [currentIndex, answerState]);
 
-  const checkSentenceContainsWord = (sentence: string, word: string): boolean => {
-    const normalizedSentence = sentence.toLowerCase().trim();
-    const normalizedWord = word.toLowerCase().trim();
-    
-    // Check if the word appears as a whole word (not part of another word)
-    const wordRegex = new RegExp(`\\b${normalizedWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
-    return wordRegex.test(normalizedSentence);
+  const normalizeSentence = (sentence: string): string => {
+    return sentence
+      .toLowerCase()
+      .trim()
+      .replace(/[.,!?¿¡]/g, "") // Remove punctuation
+      .replace(/\s+/g, " "); // Normalize whitespace
+  };
+
+  const checkSentenceMatch = (userSentence: string, correctSentence: string): boolean => {
+    return normalizeSentence(userSentence) === normalizeSentence(correctSentence);
   };
 
   const handleCheckAnswer = () => {
     if (!userInput.trim() || answerState !== "unanswered") return;
 
-    const isCorrect = checkSentenceContainsWord(userInput, currentWord.term);
+    const isCorrect = checkSentenceMatch(userInput, currentSentence.spanish);
     setAnswerState(isCorrect ? "correct" : "incorrect");
 
     if (isCorrect) {
@@ -89,7 +92,7 @@ const WritingHardExercise = () => {
   };
 
   const handleNext = () => {
-    if (currentIndex < words.length - 1) {
+    if (currentIndex < sentences.length - 1) {
       setCurrentIndex(currentIndex + 1);
       setUserInput("");
       setAnswerState("unanswered");
@@ -161,7 +164,7 @@ const WritingHardExercise = () => {
 
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
-              {currentIndex + 1} / {words.length}
+              {currentIndex + 1} / {sentences.length}
             </span>
             <div className="w-32">
               <Progress value={progress} className="h-2" />
@@ -187,12 +190,12 @@ const WritingHardExercise = () => {
                 Exercise Complete!
               </h2>
               <p className="mb-4 text-4xl font-bold text-primary">
-                {correctCount} / {words.length}
+                {correctCount} / {sentences.length}
               </p>
               <p className="mb-8 text-muted-foreground">
-                {correctCount === words.length
+                {correctCount === sentences.length
                   ? "Perfect score! Amazing work!"
-                  : correctCount >= words.length * 0.7
+                  : correctCount >= sentences.length * 0.7
                   ? "Great job! Keep practicing!"
                   : "Keep learning, you'll get better!"}
               </p>
@@ -223,19 +226,19 @@ const WritingHardExercise = () => {
                 <div className="mb-6 text-center">
                   <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
                     <PenLine className="h-4 w-4" />
-                    Write a sentence using this word
+                    Translate this sentence to {mockDictionary.language}
                   </span>
                 </div>
 
-                {/* Word Card */}
+                {/* Sentence Card */}
                 <div className="mb-8 overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
                   <div className="flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10 p-12">
-                    <h2 className="mb-2 text-4xl font-bold text-foreground">
-                      {currentWord.term}
-                    </h2>
-                    <p className="text-lg text-muted-foreground">
-                      {currentWord.definition}
+                    <p className="mb-2 text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                      {mockDictionary.nativeLanguage}
                     </p>
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center">
+                      "{currentSentence.english}"
+                    </h2>
                   </div>
                 </div>
 
@@ -243,7 +246,7 @@ const WritingHardExercise = () => {
                 <div className="mb-4 flex items-start gap-2 rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
                   <Lightbulb className="mt-0.5 h-4 w-4 shrink-0" />
                   <p>
-                    Write a complete sentence in {mockDictionary.language} that includes the word "<strong className="text-foreground">{currentWord.term}</strong>".
+                    Write the complete translation in {mockDictionary.language}.
                     Press <kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Ctrl</kbd>+<kbd className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Enter</kbd> to submit.
                   </p>
                 </div>
@@ -256,7 +259,7 @@ const WritingHardExercise = () => {
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder="Write your sentence here..."
+                      placeholder="Type your translation here..."
                       disabled={answerState !== "unanswered"}
                       className={`min-h-[120px] resize-none text-base ${getTextareaStyle()}`}
                     />
@@ -308,20 +311,21 @@ const WritingHardExercise = () => {
                             <div className="flex items-center gap-2">
                               <XCircle className="h-5 w-5" />
                               <span className="font-semibold">
-                                Your sentence must include "{currentWord.term}"
+                                Not quite right
                               </span>
                               <span className="ml-2 rounded-full bg-destructive/20 px-3 py-1 text-sm font-bold">
                                 {getMasteryPoints()} mastery
                               </span>
                             </div>
-                            <p className="text-sm opacity-80">
-                              Try writing something like: "Me gusta la {currentWord.term.toLowerCase()}."
+                            <p className="mt-2 text-sm">
+                              <span className="opacity-80">Correct answer: </span>
+                              <strong className="text-foreground">{currentSentence.spanish}</strong>
                             </p>
                           </>
                         )}
                       </div>
                       <Button onClick={handleNext} className="w-full">
-                        {currentIndex < words.length - 1
+                        {currentIndex < sentences.length - 1
                           ? "Continue"
                           : "See Results"}
                       </Button>
