@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -8,6 +8,8 @@ import {
   RotateCcw,
   Sparkles,
   MessageSquareText,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -126,6 +128,7 @@ const ContextHardExercise = () => {
   const [answerState, setAnswerState] = useState<AnswerState>("unanswered");
   const [correctCount, setCorrectCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   const currentExercise = exercises[currentIndex];
   const progress = (currentIndex / exercises.length) * 100;
@@ -154,6 +157,7 @@ const ContextHardExercise = () => {
       setCurrentIndex(currentIndex + 1);
       setUserInput("");
       setAnswerState("unanswered");
+      setShowHint(false);
     } else {
       setShowResult(true);
     }
@@ -175,7 +179,12 @@ const ContextHardExercise = () => {
     setAnswerState("unanswered");
     setCorrectCount(0);
     setShowResult(false);
+    setShowHint(false);
   };
+
+  const toggleHint = useCallback(() => {
+    setShowHint((prev) => !prev);
+  }, []);
 
   const getMasteryPoints = () => {
     if (answerState === "correct") return "+10";
@@ -315,14 +324,32 @@ const ContextHardExercise = () => {
                     {renderSentenceWithInput()}
                   </div>
 
-                  {/* Translation hint */}
+                  {/* Translation hint - clickable toggle */}
                   <div className="border-t border-border bg-muted/30 p-4 text-center">
-                    <p className="text-sm text-muted-foreground italic">
-                      {currentExercise.word.sentenceTranslation.replace(
-                        currentExercise.word.definition.toLowerCase(),
-                        "___"
+                    <button
+                      onClick={toggleHint}
+                      className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showHint ? (
+                        <>
+                          <EyeOff className="h-4 w-4" />
+                          Hide hint
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-4 w-4" />
+                          Show hint
+                        </>
                       )}
-                    </p>
+                    </button>
+                    {showHint && (
+                      <p className="mt-2 text-sm text-muted-foreground italic">
+                        {currentExercise.word.sentenceTranslation.replace(
+                          currentExercise.word.definition.toLowerCase(),
+                          "___"
+                        )}
+                      </p>
+                    )}
                   </div>
                 </div>
 
