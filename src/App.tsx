@@ -18,6 +18,7 @@ import TranslationExercise from "./pages/TranslationExercise";
 import TranslationHardExercise from "./pages/TranslationHardExercise";
 import WritingHardExercise from "./pages/WritingHardExercise";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/dictionaries/:dictionaryId/translation-hard" element={<TranslationHardExercise />} />
           <Route path="/dictionaries/:dictionaryId/writing-hard" element={<WritingHardExercise />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
