@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Bell, Clock, CalendarDays, Link2, Unlink, Check } from "lucide-react";
+import { Calendar, Bell, Clock, CalendarDays, Link2, Unlink, Check } from "lucide-react";
+import AuthenticatedHeader from "@/components/AuthenticatedHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -90,17 +90,10 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Link to="/dictionaries" className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <h1 className="text-xl font-semibold">Settings</h1>
-        </div>
-      </header>
+      <AuthenticatedHeader />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl space-y-6">
+        <h1 className="text-2xl font-bold mb-6">Settings</h1>
         {/* Study Schedule */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
