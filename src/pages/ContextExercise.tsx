@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, XCircle, RotateCcw, Sparkles, MessageSquareText } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Sparkles, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ExerciseHeader from "@/components/ExerciseHeader";
 
 // Mock data
 const mockDictionary = {
@@ -115,7 +115,6 @@ const ContextExercise = () => {
   const [correctCount, setCorrectCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const currentExercise = exercises[currentIndex];
-  const progress = currentIndex / exercises.length * 100;
   const handleSelectOption = (optionId: string) => {
     if (answerState !== "unanswered") return;
     setSelectedId(optionId);
@@ -178,36 +177,14 @@ const ContextExercise = () => {
       </div>;
   };
   return <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate(`/dictionaries/${dictionaryId}`)}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{mockDictionary.flag}</span>
-              <div>
-                <h1 className="text-lg font-semibold text-foreground">
-                  Context
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {mockDictionary.name}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">
-              {currentIndex + 1} / {exercises.length}
-            </span>
-            <div className="w-32">
-              <Progress value={progress} className="h-2" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <ExerciseHeader
+        dictionaryId={dictionaryId || ""}
+        exerciseName="Context"
+        dictionaryName={mockDictionary.name}
+        flag={mockDictionary.flag}
+        currentIndex={currentIndex}
+        totalCount={exercises.length}
+      />
 
       {/* Main Content */}
       <main className="container py-8">
