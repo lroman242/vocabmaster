@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
-import { CheckCircle2, XCircle, RotateCcw, Sparkles, MessageSquareText } from "lucide-react";
+import { CheckCircle2, XCircle, RotateCcw, Sparkles, MessageSquareText, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import AuthenticatedHeader from "@/components/AuthenticatedHeader";
@@ -179,8 +179,16 @@ const ContextExercise = () => {
   return <div className="min-h-screen bg-background">
       <AuthenticatedHeader />
 
+      {/* Back to Dictionary */}
+      <div className="container py-4">
+        <Button variant="ghost" className="gap-2" onClick={() => navigate(`/dictionaries/${dictionaryId}`)}>
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dictionary
+        </Button>
+      </div>
+
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container pb-8">
         <div className="mx-auto max-w-2xl">
           {showResult ? (/* Results Screen */
         <motion.div initial={{
