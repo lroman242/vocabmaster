@@ -8,6 +8,7 @@ import {
   PenLine,
   Sparkles,
   Lightbulb,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -138,8 +139,16 @@ const WritingHardExercise = () => {
     <div className="min-h-screen bg-background">
       <AuthenticatedHeader />
 
+      {/* Back to Dictionary */}
+      <div className="container py-4">
+        <Button variant="ghost" className="gap-2" onClick={() => navigate(`/dictionaries/${dictionaryId}`)}>
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dictionary
+        </Button>
+      </div>
+
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container pb-8">
         <div className="mx-auto max-w-2xl">
           {showResult ? (
             /* Results Screen */
