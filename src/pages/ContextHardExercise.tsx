@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { CheckCircle2, XCircle, RotateCcw, Sparkles, MessageSquareText, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ExerciseHeader from "@/components/ExerciseHeader";
+import AuthenticatedHeader from "@/components/AuthenticatedHeader";
 
 // Mock data
 const mockDictionary = {
@@ -177,14 +177,7 @@ const ContextHardExercise = () => {
       </div>;
   };
   return <div className="min-h-screen bg-background">
-      <ExerciseHeader
-        dictionaryId={dictionaryId || ""}
-        exerciseName="Context Hard"
-        dictionaryName={mockDictionary.name}
-        flag={mockDictionary.flag}
-        currentIndex={currentIndex}
-        totalCount={exercises.length}
-      />
+      <AuthenticatedHeader />
 
       {/* Main Content */}
       <main className="container py-8">

@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import ExerciseHeader from "@/components/ExerciseHeader";
+import AuthenticatedHeader from "@/components/AuthenticatedHeader";
 
 // Mock data
 const mockDictionary = {
@@ -136,14 +136,7 @@ const WritingHardExercise = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <ExerciseHeader
-        dictionaryId={dictionaryId || ""}
-        exerciseName="Writing Hard"
-        dictionaryName={mockDictionary.name}
-        flag={mockDictionary.flag}
-        currentIndex={currentIndex}
-        totalCount={sentences.length}
-      />
+      <AuthenticatedHeader />
 
       {/* Main Content */}
       <main className="container py-8">
